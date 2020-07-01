@@ -9,7 +9,7 @@ export default function RecipeScreen() {
             alignItems: "center",
             justifyContent: "center"
         }}>
-            <Text>Recipes Screen</Text>
+            <Text>Settings Screen</Text>
         </View>
     );
 }

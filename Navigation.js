@@ -16,50 +16,76 @@ const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const MainNavigator = function StackNavigator() {
+const MainNavigator = function DrawerNavigatior() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#55ceff",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Main"
-          component={MyDrawerNavigator}
+      <Drawer.Navigator hideStatusBar="true">
+        <Drawer.Screen
+          name="HomeScreen"
+          component={HomeStackNavigator}
           options={{
-            title: null,
-            headerLeft: () => (
-              <MaterialCommunityIcons.Button
-                name="menu"
-                size={32}
-                color="white"
-                backgroundColor="#55ceff"
-                // onPress={() => navigation.openDrawer()}
-              ></MaterialCommunityIcons.Button>
-            ),
+            drawerLabel: "Home",
           }}
         />
-      </Stack.Navigator>
+        <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
-const MyDrawerNavigator = function DrawerNavigatior() {
-  return (
-    <Drawer.Navigator hideStatusBar="true">
-      <Drawer.Screen
-        name="HomeScreen"
-        component={MyMaterialBottomTabNavigator}
-        options={{
-          drawerLabel: "Home",
-        }}
-      />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
-    </Drawer.Navigator>
-  );
-};
+
+const HomeStackNavigator = ({ navigation }) => (
+  <Stack.Navigator
+    screenOptions={({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: "#55ceff",
+      },
+      headerLeft: () => (
+        <MaterialCommunityIcons.Button
+          name="menu"
+          size={32}
+          color="white"
+          backgroundColor="#55ceff"
+          onPress={() => navigation.toggleDrawer()}
+        ></MaterialCommunityIcons.Button>
+      ),
+    })}
+  >
+    <Stack.Screen
+      name="Home"
+      component={MyMaterialBottomTabNavigator}
+      options={{
+        title: null,
+      }}
+    />
+  </Stack.Navigator>
+);
+
+const SettingsStackNavigator = ({ navigation }) => (
+  <Stack.Navigator
+    screenOptions={({ navigation }) => ({
+      headerStyle: {
+        backgroundColor: "#55ceff",
+      },
+      headerLeft: () => (
+        <MaterialCommunityIcons.Button
+          name="menu"
+          size={32}
+          color="white"
+          backgroundColor="#55ceff"
+          onPress={() => navigation.toggleDrawer()}
+        ></MaterialCommunityIcons.Button>
+      ),
+    })}
+  >
+    <Stack.Screen
+      name="Settings"
+      component={SettingsScreen}
+      options={{
+        title: null,
+      }}
+    />
+  </Stack.Navigator>
+);
 
 const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator() {
   return (

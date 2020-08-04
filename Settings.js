@@ -1,15 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Text, SafeAreaView, TouchableOpacity, ScrollView } from "react-native";
+import { styles } from "./Styles/defaultStyle";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function RecipeScreen() {
-    return(
-        <View style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center"
-        }}>
-            <Text>Settings Screen</Text>
-        </View>
-    );
+  return (
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.settingsOption}>
+        <Text style={styles.settingsText}>
+          <MaterialCommunityIcons style={styles.settingsIcon}
+            name="menu"
+            size={20}
+            color="black"
+            backgroundColor="#89e8e8"
+          ></MaterialCommunityIcons>
+          Profile Settings
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.settingsOption}>
+        <Text style={styles.settingsText}>Recipe View Style</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.settingsOption}>
+        <Text style={styles.settingsText}>Theme</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
 }

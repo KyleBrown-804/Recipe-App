@@ -9,13 +9,15 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 // Screens
 import HomeScreen from "./Home";
-import RecipeScreen from "./Recipes";
+import RecipeScreen from "./RecipeScreen";
 import SettingsScreen from "./Settings";
+import AddRecipeScreen from "./AddRecipeScreen";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
+// Drawer Navigator has to be exported as parent to be seen
 const MainNavigator = function DrawerNavigatior() {
   return (
     <NavigationContainer>
@@ -33,18 +35,19 @@ const MainNavigator = function DrawerNavigatior() {
   );
 };
 
+// Stack Navigators are used solely to implement the header bar and menu button
 const HomeStackNavigator = ({ navigation }) => (
   <Stack.Navigator
     screenOptions={({ navigation }) => ({
       headerStyle: {
-        backgroundColor: "#55ceff",
+        backgroundColor: "#89e8e8",
       },
       headerLeft: () => (
         <MaterialCommunityIcons.Button
           name="menu"
           size={32}
           color="white"
-          backgroundColor="#55ceff"
+          backgroundColor="#89e8e8"
           onPress={() => navigation.toggleDrawer()}
         ></MaterialCommunityIcons.Button>
       ),
@@ -64,14 +67,14 @@ const SettingsStackNavigator = ({ navigation }) => (
   <Stack.Navigator
     screenOptions={({ navigation }) => ({
       headerStyle: {
-        backgroundColor: "#55ceff",
+        backgroundColor: "#89e8e8",
       },
       headerLeft: () => (
         <MaterialCommunityIcons.Button
           name="menu"
           size={32}
           color="white"
-          backgroundColor="#55ceff"
+          backgroundColor="#89e8e8"
           onPress={() => navigation.toggleDrawer()}
         ></MaterialCommunityIcons.Button>
       ),
@@ -87,20 +90,30 @@ const SettingsStackNavigator = ({ navigation }) => (
   </Stack.Navigator>
 );
 
+// Tab Navigation for logged in state on home page
 const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator() {
   return (
     <Tabs.Navigator
       initialRouteName="Home"
       activeColor="white"
       inactiveColor="black"
-      barStyle={{ backgroundColor: "#55ceff" }}
+      barStyle={{ backgroundColor: "#89e8e8" }}
     >
       <Tabs.Screen
-        name="Home"
+        name="My Feed"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" size={24} color={color} />
+            <MaterialCommunityIcons name="food-fork-drink" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Add Recipe"
+        component={AddRecipeScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="playlist-edit" size={24} color={color} />
           ),
         }}
       />

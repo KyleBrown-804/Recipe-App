@@ -5,7 +5,7 @@ import MainNavigator from "./Navigation";
 
 export default function App() {
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <MainNavigator />
     </SafeAreaView>
   );

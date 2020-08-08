@@ -2,6 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { fetchToken } from "./AuthLoadingScreen";
+
 // Navigators
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
@@ -12,15 +14,51 @@ import HomeScreen from "./Home";
 import RecipeScreen from "./RecipeScreen";
 import SettingsScreen from "./Settings";
 import AddRecipeScreen from "./AddRecipeScreen";
+import LoginScreen from "./AuthScreens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-// Drawer Navigator has to be exported as parent to be seen
-const MainNavigator = function DrawerNavigatior() {
+const MainNavigator = function SwitchNavigator({navigation}) {
+  let isLoggedIn;
+
+  fetchToken().then((resp) => {
+    isLoggedIn = resp;
+  });
+
+  console.log("isLoggedIn: " + isLoggedIn);
+
   return (
     <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {isLoggedIn ? (
+          <Stack.Screen name="LoggedIn" component={AppNavigator} />
+        ) : (
+          <Stack.Screen name="LoggedOut" component={AuthNavigator} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const AuthNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Stack.Screen name="Login" component={LoginScreen} />
+  </Stack.Navigator>
+);
+
+// Drawer Navigator has to be exported as parent to be seen
+const AppNavigator = function DrawerNavigatior({ navigation }) {
+  return (
       <Drawer.Navigator hideStatusBar="true">
         <Drawer.Screen
           name="HomeScreen"
@@ -31,7 +69,6 @@ const MainNavigator = function DrawerNavigatior() {
         />
         <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
       </Drawer.Navigator>
-    </NavigationContainer>
   );
 };
 
@@ -91,7 +128,9 @@ const SettingsStackNavigator = ({ navigation }) => (
 );
 
 // Tab Navigation for logged in state on home page
-const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator() {
+const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator({
+  navigation,
+}) {
   return (
     <Tabs.Navigator
       initialRouteName="Home"
@@ -104,7 +143,11 @@ const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="food-fork-drink" size={24} color={color} />
+            <MaterialCommunityIcons
+              name="food-fork-drink"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />
@@ -113,7 +156,11 @@ const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator() {
         component={AddRecipeScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="playlist-edit" size={24} color={color} />
+            <MaterialCommunityIcons
+              name="playlist-edit"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />

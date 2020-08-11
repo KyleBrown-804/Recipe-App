@@ -4,7 +4,7 @@ import {
   AsyncStorage,
   StatusBar,
 } from "react-native";
-import firebase from "./FirebaseConfig";
+import firebase from "../FirebaseConfig";
 
 export async function checkUserAuth() {
   await firebase.auth().onAuthStateChanged((user) => {
@@ -17,8 +17,8 @@ export async function checkUserAuth() {
 }
 
 export async function signInWithEmail(email, password) {
-  console.log('attempting to sign in with email and password');
-  
+  console.log("attempting to sign in with email and password");
+
   await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -38,8 +38,8 @@ export async function signOut() {
   await firebase
     .auth()
     .signOut()
-    .then( async () => {
-      await AsyncStorage.clear();
+    .then(async () => {
+      await AsyncStorage.removeItem("auth_token");
       Alert.alert("You have been signed out successfully!");
       console.log("You have been signed out successfully!");
     })

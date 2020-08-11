@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component, useContext } from "react";
 import { styles } from "../Styles/defaultStyle";
 import {
   SafeAreaView,
@@ -7,21 +7,15 @@ import {
   TextInput,
   AsyncStorage,
 } from "react-native";
-import { signInWithEmail } from "../Authentication";
+import { signInWithEmail } from "./Authentication";
 
-export default function LoginScreen() {
-  state = {
-    email: "",
-    password: "",
-  };
-
+export default function LoginScreen({ navigation }) {
   async function onLoginPress() {
     console.log("onLoginPress activated");
-    signInWithEmail("please@email.com", "dev1234!").catch(error => {
-      console.log(error + ": Error attempting to sign in")
+    signInWithEmail("please@email.com", "dev1234!").catch((error) => {
+      console.log(error + ": Error attempting to sign in");
     });
-    navigation.push("LoggedIn");
-    console.log("loggin pushed");
+    navigation.navigate("LoggedIn");
   }
 
   return (

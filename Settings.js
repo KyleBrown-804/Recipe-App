@@ -1,21 +1,23 @@
-import React from "react";
-import { Text, SafeAreaView, TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
+import React, { Component } from "react";
+import {
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  AsyncStorage,
+} from "react-native";
 import { styles } from "./Styles/defaultStyle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { signOut } from "./Authentication";
-import { useNavigation } from "@react-navigation/native";
+import { signOut } from "./Auth/Authentication";
 
-export default function RecipeScreen() {
-  const navigation = useNavigation();
-
-  async function onSignOutPress() {
-    console.log('onSignOutPress activated');
+export default function SettingsScreen({navigation}) {
+  async function onSignOutPress(){
+    console.log("onSignOutPress activated");
     signOut().then(() => {
-      this.props.navigation.navigate('LoggedOut');
+      navigation.navigate("LoggedOut");
     });
-    
-  }
-  
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.settingsOption}>
@@ -36,7 +38,12 @@ export default function RecipeScreen() {
       <TouchableOpacity style={styles.settingsOption}>
         <Text style={styles.settingsText}>Theme</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingsOption} onPress={() => onSignOutPress()}>
+      <TouchableOpacity
+        style={styles.settingsOption}
+        onPress={() => {
+          onSignOutPress();
+        }}
+      >
         <Text style={styles.settingsText}>Sign Out</Text>
       </TouchableOpacity>
     </SafeAreaView>

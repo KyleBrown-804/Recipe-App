@@ -1,8 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { fetchToken } from "./AuthLoadingScreen";
+import { styles } from "./Styles/defaultStyle";
 
 // Navigators
 import { NavigationContainer } from "@react-navigation/native";
@@ -14,123 +13,117 @@ import HomeScreen from "./Home";
 import RecipeScreen from "./RecipeScreen";
 import SettingsScreen from "./Settings";
 import AddRecipeScreen from "./AddRecipeScreen";
-import LoginScreen from "./AuthScreens/LoginScreen";
+import LoginScreen from "./Auth/LoginScreen";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const MainNavigator = function SwitchNavigator({navigation}) {
-  let isLoggedIn;
-
-  fetchToken().then((resp) => {
-    isLoggedIn = resp;
-  });
-
-  console.log("isLoggedIn: " + isLoggedIn);
-
+function MainNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
+        initialRouteName="LoggedIn"
       >
-        {isLoggedIn ? (
-          <Stack.Screen name="LoggedIn" component={AppNavigator} />
-        ) : (
-          <Stack.Screen name="LoggedOut" component={AuthNavigator} />
-        )}
+        <Stack.Screen name="LoggedIn" component={AppNavigator} />
+        <Stack.Screen name="LoggedOut" component={AuthNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
 
-const AuthNavigator = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-  >
-    <Stack.Screen name="Login" component={LoginScreen} />
-  </Stack.Navigator>
-);
+function AuthNavigator({ navigation }) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+    </Stack.Navigator>
+  );
+}
 
 // Drawer Navigator has to be exported as parent to be seen
-const AppNavigator = function DrawerNavigatior({ navigation }) {
+function AppNavigator({ navigation }) {
   return (
-      <Drawer.Navigator hideStatusBar="true">
-        <Drawer.Screen
-          name="HomeScreen"
-          component={HomeStackNavigator}
-          options={{
-            drawerLabel: "Home",
-          }}
-        />
-        <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
-      </Drawer.Navigator>
+    <Drawer.Navigator hideStatusBar="true">
+      <Drawer.Screen
+        name="HomeScreen"
+        component={HomeStackNavigator}
+        options={{
+          drawerLabel: "Home",
+        }}
+      />
+      <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
+    </Drawer.Navigator>
   );
-};
+}
 
 // Stack Navigators are used solely to implement the header bar and menu button
-const HomeStackNavigator = ({ navigation }) => (
-  <Stack.Navigator
-    screenOptions={({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: "#89e8e8",
-      },
-      headerLeft: () => (
-        <MaterialCommunityIcons.Button
-          name="menu"
-          size={32}
-          color="white"
-          backgroundColor="#89e8e8"
-          onPress={() => navigation.toggleDrawer()}
-        ></MaterialCommunityIcons.Button>
-      ),
-    })}
-  >
-    <Stack.Screen
-      name="Home"
-      component={MyMaterialBottomTabNavigator}
-      options={{
-        title: null,
-      }}
-    />
-  </Stack.Navigator>
-);
+function HomeStackNavigator() {
+  return (
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerStyle: {
+          backgroundColor: "#89e8e8",
+        },
+        headerLeft: () => (
+          <MaterialCommunityIcons.Button
+            name="menu"
+            size={32}
+            color="white"
+            backgroundColor="#89e8e8"
+            onPress={() => navigation.toggleDrawer()}
+          ></MaterialCommunityIcons.Button>
+        ),
+      })}
+    >
+      <Stack.Screen
+        name="Home"
+        component={MyMaterialBottomTabNavigator}
+        options={{
+          title: null,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-const SettingsStackNavigator = ({ navigation }) => (
-  <Stack.Navigator
-    screenOptions={({ navigation }) => ({
-      headerStyle: {
-        backgroundColor: "#89e8e8",
-      },
-      headerLeft: () => (
-        <MaterialCommunityIcons.Button
-          name="menu"
-          size={32}
-          color="white"
-          backgroundColor="#89e8e8"
-          onPress={() => navigation.toggleDrawer()}
-        ></MaterialCommunityIcons.Button>
-      ),
-    })}
-  >
-    <Stack.Screen
-      name="Settings"
-      component={SettingsScreen}
-      options={{
-        title: null,
-      }}
-    />
-  </Stack.Navigator>
-);
+function SettingsStackNavigator() {
+  return (
+    <Stack.Navigator
+      screenOptions={({ navigation }) => ({
+        headerStyle: {
+          backgroundColor: "#89e8e8",
+        },
+        headerLeft: () => (
+          <MaterialCommunityIcons.Button
+            name="menu"
+            size={32}
+            color="white"
+            backgroundColor="#89e8e8"
+            onPress={() => navigation.toggleDrawer()}
+          ></MaterialCommunityIcons.Button>
+        ),
+      })}
+    >
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: null,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 // Tab Navigation for logged in state on home page
-const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator({
-  navigation,
-}) {
+function MyMaterialBottomTabNavigator() {
   return (
     <Tabs.Navigator
       initialRouteName="Home"
@@ -175,6 +168,6 @@ const MyMaterialBottomTabNavigator = function MaterialBottomTabNavigator({
       />
     </Tabs.Navigator>
   );
-};
+}
 
 export default MainNavigator;

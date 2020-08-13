@@ -3,19 +3,14 @@ import { styles } from "../Styles/defaultStyle";
 import { SafeAreaView, TouchableOpacity, Text, TextInput } from "react-native";
 import { AuthContext } from "./Authentication";
 
-export default function LoginScreen() {
-  const { signIn } = React.useContext(AuthContext);
+export default function SignUpScreen({ navigation }) {
+  async function onSignUpPress() {}
 
   return (
     <SafeAreaView style={styles.container}>
       <TextInput placeholder="Email or Username"></TextInput>
       <TextInput placeholder="Password"></TextInput>
-      <TouchableOpacity
-        onPress={() => {
-          console.log("sign in pressed");
-          signIn("user", "pass");
-        }}
-      >
+      <TouchableOpacity onPress={() => onSignUpPress()}>
         <Text>Sign In!</Text>
       </TouchableOpacity>
       <TouchableOpacity>

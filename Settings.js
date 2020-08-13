@@ -1,23 +1,13 @@
-import React, { Component } from "react";
-import {
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  AsyncStorage,
-} from "react-native";
+import React from "react";
+import { Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { styles } from "./Styles/defaultStyle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { signOut } from "./Auth/Authentication";
+import { AuthContext, signOut } from "./Auth/Authentication";
 
-export default function SettingsScreen({navigation}) {
-  async function onSignOutPress(){
-    console.log("onSignOutPress activated");
-    signOut().then(() => {
-      navigation.navigate("LoggedOut");
-    });
-  };
-
+export default function SettingsScreen() {
+  
+  const { signOut } = React.useContext(AuthContext);
+  
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.settingsOption}>
@@ -41,7 +31,7 @@ export default function SettingsScreen({navigation}) {
       <TouchableOpacity
         style={styles.settingsOption}
         onPress={() => {
-          onSignOutPress();
+          signOut();
         }}
       >
         <Text style={styles.settingsText}>Sign Out</Text>

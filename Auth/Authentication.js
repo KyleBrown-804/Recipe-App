@@ -14,10 +14,35 @@ export async function checkUserAuth() {
   });
 }
 
+export async function createUserWithEmail(email, password) {
+  console.log("attempting to create new user with email and password");
+  await firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(async () => {
+      await AsyncStorage.setItem("auth_token", "LoggedIn");
+      console.log("create account successful with email and password!");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode == "auth/email-already-in-use") {
+        alert("Email is already in use!");
+        console.log(errorMessage);
+      } else if (errorCode == "auth/invalid-email") {
+        alert("The email entered is invalid!");
+        console.log(errorMessage);
+      } else if (errorCode == "auth/weak-password") {
+        alert("The password entered is too weak, please try another!");
+        console.log(errorMessage);
+      } else {
+        console.log(errorMessage);
+      }
+    });
+}
+
 export async function signInWithEmail(email, password) {
   console.log("attempting to sign in with email and password");
-
-  const userToken = null;
 
   await firebase
     .auth()
@@ -25,16 +50,26 @@ export async function signInWithEmail(email, password) {
     .then(async () => {
       await AsyncStorage.setItem("auth_token", "LoggedIn");
       console.log("login successful with email and password!");
-      userToken = "blah blah blah";
-      return userToken;
     })
     .catch(function (error) {
-      Alert.alert("Invalid email or password!");
-      console.log(
-        error + ": An occured when signing in with email and password"
-      );
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode == "auth/invalid-email") {
+        alert("The email address entered was invalid.");
+        console.log(errorMessage);
+      } else if (errorCode == "auth/user-disabled") {
+        alert("The account or email associated has been disabled.");
+        console.log(errorMessage);
+      } else if (errorCode == "auth/user-not-found") {
+        alert("There is no user associated with the entered email.");
+        console.log(errorMessage);
+      } else if (errorCode == "auth/wrong-password") {
+        alert("The password entered was incorrect.");
+        console.log(errorMessage);
+      } else {
+        console.log(errorMessage);
+      }
     });
-    return userToken;
 }
 
 export async function signOut() {
@@ -43,7 +78,6 @@ export async function signOut() {
     .signOut()
     .then(async () => {
       await AsyncStorage.removeItem("auth_token");
-      // Alert.alert("You have been signed out successfully!");
       console.log("You have been signed out successfully!");
     })
     .catch(function (error) {

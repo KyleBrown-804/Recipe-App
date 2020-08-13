@@ -1,10 +1,17 @@
 import React from "react";
 import { styles } from "../Styles/defaultStyle";
 import { SafeAreaView, TouchableOpacity, Text, TextInput } from "react-native";
-import { AuthContext } from "./Authentication";
+import { signInWithEmail } from "./Authentication";
 
-export default function LoginScreen() {
-  const { signIn } = React.useContext(AuthContext);
+export default function LoginScreen({ navigation }) {
+  async function onLoginPress(email, password) {
+    console.log("sign in pressed");
+    signInWithEmail(email, password)
+      .then(() => {
+        navigation.navigate("Loading");
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -12,8 +19,7 @@ export default function LoginScreen() {
       <TextInput placeholder="Password"></TextInput>
       <TouchableOpacity
         onPress={() => {
-          console.log("sign in pressed");
-          signIn("user", "pass");
+          onLoginPress("please@email.com", "dev1234!");
         }}
       >
         <Text>Sign In!</Text>

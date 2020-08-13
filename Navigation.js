@@ -1,8 +1,6 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
+import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./Styles/defaultStyle";
-import { AuthContext, signInWithEmail, signOut } from "./Auth/Authentication";
 
 // Navigators
 import { NavigationContainer } from "@react-navigation/native";
@@ -21,98 +19,20 @@ const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function MainNavigator({ navigation }) {
-
-  const [loginState, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "RETRIEVE_TOKEN":
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case "LOGIN":
-          return {
-            ...prevState,
-            email: action.id,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case "LOGOUT":
-          return {
-            ...prevState,
-            email: null,
-            userToken: null,
-            isLoading: false,
-          };
-        case "REGISTER":
-          return {
-            ...prevState,
-            email: action.id,
-            userToken: action.token,
-            isLoading: false,
-          };
-      }
-    },
-    {
-    isLoading: true,
-    email: null,
-    userToken: null,
-    }
-  );
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: (email, password) => {
-        // this is where you would make a firebase signInWithEmail call,
-        // the problem is though it automatically dispatches even if authentication fails
-
-        let userToken = null;
-        if (email == "user" && password == "pass") {
-          userToken = "randomToken";
-        }
-        dispatch({ type: "LOGIN", id: email, token: userToken });
-      },
-      signOut: () => {
-        dispatch({ type: "LOGOUT" });
-      },
-      signUp: () => {},
-    }),
-    []
-  );
-
-  // figure out issue with sign out then re-open app coming in as logged in
-
-  useEffect(() => {
-    setTimeout(() => {
-      let userToken;
-      userToken = "af3wtg342";
-      console.log("user token: ", userToken);
-      dispatch({ type: "RETRIEVE_TOKEN", token: userToken });
-    }, 2000);
-  }, []);
-
-  if (loginState.isLoading) {
-    return <LoadingScreen />;
-  }
-
+function MainNavigator() {
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {loginState.userToken != null ? (
-            <Stack.Screen name="LoggedIn" component={AppNavigator} />
-          ) : (
-            <Stack.Screen name="LoggedOut" component={AuthNavigator} />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="Loading"
+      >
+        <Stack.Screen name="Loading" component={LoadingScreen} />
+        <Stack.Screen name="LoggedIn" component={AppNavigator} />
+        <Stack.Screen name="LoggedOut" component={AuthNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -145,7 +65,7 @@ function AppNavigator({ navigation }) {
 }
 
 // Stack Navigators are used solely to implement the header bar and menu button
-function HomeStackNavigator() {
+function HomeStackNavigator({ navigation }) {
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -174,7 +94,7 @@ function HomeStackNavigator() {
   );
 }
 
-function SettingsStackNavigator() {
+function SettingsStackNavigator({ navigation }) {
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -204,7 +124,7 @@ function SettingsStackNavigator() {
 }
 
 // Tab Navigation for logged in state on home page
-function MyMaterialBottomTabNavigator() {
+function MyMaterialBottomTabNavigator({ navigation }) {
   return (
     <Tabs.Navigator
       initialRouteName="Home"

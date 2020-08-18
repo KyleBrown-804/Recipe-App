@@ -5,14 +5,14 @@ import {
   SafeAreaView,
   AsyncStorage,
 } from "react-native";
-import firebase from "../FirebaseConfig";
+import firebase from "../../FirebaseConfig";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function LoadingScreen({ navigation }) {
   const isFocused = useIsFocused();
 
   if (isFocused) {
-    setTimeout(() => checkUserAuth(), 2000);
+    setTimeout(() => checkUserAuth(), 1000);
   }
 
   async function checkUserAuth() {

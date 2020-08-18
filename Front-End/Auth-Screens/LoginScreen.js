@@ -1,7 +1,7 @@
 import React from "react";
-import { styles } from "../Styles/defaultStyle";
+import { styles } from "../../Styles/defaultStyle";
 import { SafeAreaView, TouchableOpacity, Text, TextInput } from "react-native";
-import { signInWithEmail } from "./Authentication";
+import { signInWithEmail } from "../../Back-End/Auth/Authentication";
 
 export default function LoginScreen({ navigation }) {
   async function onLoginPress(email, password) {

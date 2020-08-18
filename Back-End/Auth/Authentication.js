@@ -1,18 +1,5 @@
-import React from "react";
 import { Alert, AsyncStorage } from "react-native";
-import firebase from "../FirebaseConfig";
-
-export const AuthContext = React.createContext();
-
-export async function checkUserAuth() {
-  await firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      console.log(user + " has been authenticated");
-    } else {
-      console.log("user not authenticated");
-    }
-  });
-}
+import firebase from "../../FirebaseConfig";
 
 export async function createUserWithEmail(email, password) {
   console.log("attempting to create new user with email and password");

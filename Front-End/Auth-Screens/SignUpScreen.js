@@ -1,7 +1,6 @@
 import React from "react";
-import { styles } from "../Styles/defaultStyle";
+import { styles } from "../../Styles/defaultStyle";
 import { SafeAreaView, TouchableOpacity, Text, TextInput } from "react-native";
-import { AuthContext } from "./Authentication";
 
 export default function SignUpScreen({ navigation }) {
   async function onSignUpPress() {}

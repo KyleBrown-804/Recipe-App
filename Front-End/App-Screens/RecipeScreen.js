@@ -9,32 +9,32 @@ import {
   Image,
   ImageStore,
 } from "react-native";
-import { styles } from "./Styles/defaultStyle";
+import { styles } from "../../Styles/defaultStyle";
 
 export default function RecipeScreen() {
   const Recipes = [
     {
       id: "1",
       title: "Chicken Katsu",
-      src: "./assets/sampleFoods/ChickenKatsu.jpg",
+      src: "../../assets/sampleFoods/ChickenKatsu.jpg",
     },
-    { id: "2", title: "Sushi Roll", src: "./assets/sampleFoods/Sushi.jpg" },
-    { id: "3", title: "Yakisoba", src: "./assets/sampleFoods/Yakisoba.jpg" },
+    { id: "2", title: "Sushi Roll", src: "../../assets/sampleFoods/Sushi.jpg" },
+    { id: "3", title: "Yakisoba", src: "../../assets/sampleFoods/Yakisoba.jpg" },
     {
       id: "4",
       title: "Street Tacos",
-      src: "./assets/sampleFoods/StreetTacos.jpg",
+      src: "../../assets/sampleFoods/StreetTacos.jpg",
     },
     {
       id: "5",
       title: "Quesadillas",
-      src: "./assets/sampleFoods/Quesadillas.jpg",
+      src: "../../assets/sampleFoods/Quesadillas.jpg",
     },
-    { id: "6", title: "Homemade Salsa", src: "./assets/sampleFoods/Salsa.jpg" },
+    { id: "6", title: "Homemade Salsa", src: "../../assets/sampleFoods/Salsa.jpg" },
     {
       id: "7",
       title: "Margaritas",
-      src: "./assets/sampleFoods/Margaritas.jpg",
+      src: "../../assets/sampleFoods/Margaritas.jpg",
     },
   ];
 
@@ -51,7 +51,7 @@ export default function RecipeScreen() {
           <TouchableOpacity style={styles.card} onPress={() => pressHandler(item.title)}>
             <Image
               style={styles.cardImage}
-              source={require("./assets/sampleFoods/Sushi.jpg")}
+              source={require("../../assets/sampleFoods/Sushi.jpg")}
             />
             <Text style={styles.cardText}>{item.title}</Text>
           </TouchableOpacity>

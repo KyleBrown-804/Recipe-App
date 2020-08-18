@@ -1,6 +1,5 @@
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { styles } from "./Styles/defaultStyle";
 
 // Navigators
 import { NavigationContainer } from "@react-navigation/native";
@@ -8,12 +7,12 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 // Screens
-import HomeScreen from "./Home";
-import RecipeScreen from "./RecipeScreen";
-import SettingsScreen from "./Settings";
-import AddRecipeScreen from "./AddRecipeScreen";
-import LoginScreen from "./Auth/LoginScreen";
-import LoadingScreen from "./Auth/LoadingScreen";
+import MyFeedScreen from "./Front-End/App-Screens/MyFeedScreen";
+import RecipeScreen from "./Front-End/App-Screens/RecipeScreen";
+import SettingsScreen from "./Front-End/App-Screens/Settings";
+import AddRecipeScreen from "./Front-End/App-Screens/AddRecipeScreen";
+import LoginScreen from "./Front-End/Auth-Screens/LoginScreen";
+import LoadingScreen from "./Back-End/Auth/LoadingScreen";
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
@@ -134,7 +133,7 @@ function MyMaterialBottomTabNavigator({ navigation }) {
     >
       <Tabs.Screen
         name="My Feed"
-        component={HomeScreen}
+        component={MyFeedScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons

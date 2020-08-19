@@ -2,13 +2,16 @@ import { Alert, AsyncStorage } from "react-native";
 import firebase from "../../FirebaseConfig";
 
 export async function createUserWithEmail(email, password) {
-  console.log("attempting to create new user with email and password");
+  let isSuccess = false;
+
+  console.log("attempting to create new user with email and password...");
   await firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
     .then(async () => {
       await AsyncStorage.setItem("auth_token", "LoggedIn");
       console.log("create account successful with email and password!");
+      isSuccess = true;
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -26,17 +29,20 @@ export async function createUserWithEmail(email, password) {
         console.log(errorMessage);
       }
     });
+    return isSuccess;
 }
 
 export async function signInWithEmail(email, password) {
-  console.log("attempting to sign in with email and password");
+  let isSuccess = false;
 
+  console.log("attempting to sign in with email and password...");
   await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(async () => {
       await AsyncStorage.setItem("auth_token", "LoggedIn");
       console.log("login successful with email and password!");
+      isSuccess = true;
     })
     .catch(function (error) {
       const errorCode = error.code;
@@ -57,6 +63,7 @@ export async function signInWithEmail(email, password) {
         console.log(errorMessage);
       }
     });
+  return isSuccess;
 }
 
 export async function signOut() {

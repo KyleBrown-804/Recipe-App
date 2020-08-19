@@ -1,30 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "../../Styles/defaultStyle";
 import { SafeAreaView, TouchableOpacity, Text, TextInput } from "react-native";
 import { signInWithEmail } from "../../Back-End/Auth/Authentication";
 
 export default function LoginScreen({ navigation }) {
-  async function onLoginPress(email, password) {
-    console.log("sign in pressed");
-    signInWithEmail(email, password)
-      .then(() => {
-        navigation.navigate("Loading");
+  // hardcoded state for testing
+  const [email, setEmail] = useState("please@email.com");
+  const [password, setPass] = useState("dev1234!");
+
+  async function onLoginPress() {
+    await signInWithEmail(email, password)
+      .then((onSuccess) => {
+        if (onSuccess) {
+          navigation.navigate("Loading");
+        } else {
+          console.log("Failed To Sign In With Email and Password");
+        }
       })
       .catch((err) => console.log(err));
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput placeholder="Email or Username"></TextInput>
-      <TextInput placeholder="Password"></TextInput>
-      <TouchableOpacity
-        onPress={() => {
-          onLoginPress("please@email.com", "dev1234!");
-        }}
-      >
+      <TextInput
+        placeholder="Email or Username"
+        // onChangeText={(input) => setEmail(input)}
+      ></TextInput>
+      <TextInput
+        placeholder="Password"
+        // onChangeText={(input) => setPass(input)}
+      ></TextInput>
+      <TouchableOpacity onPress={() => onLoginPress()}>
         <Text>Sign In!</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
         <Text>Sign Up!</Text>
       </TouchableOpacity>
     </SafeAreaView>

@@ -12,6 +12,7 @@ import RecipeScreen from "./Front-End/App-Screens/RecipeScreen";
 import SettingsScreen from "./Front-End/App-Screens/Settings";
 import AddRecipeScreen from "./Front-End/App-Screens/AddRecipeScreen";
 import LoginScreen from "./Front-End/Auth-Screens/LoginScreen";
+import SignUpScreen from "./Front-End/Auth-Screens/SignUpScreen";
 import LoadingScreen from "./Back-End/Auth/LoadingScreen";
 
 const Drawer = createDrawerNavigator();
@@ -41,8 +42,10 @@ function AuthNavigator({ navigation }) {
       screenOptions={{
         headerShown: false,
       }}
+      initialRouteName="LoginScreen"
     >
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
     </Stack.Navigator>
   );
 }

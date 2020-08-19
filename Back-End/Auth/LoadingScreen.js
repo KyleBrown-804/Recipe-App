@@ -12,7 +12,7 @@ export default function LoadingScreen({ navigation }) {
   const isFocused = useIsFocused();
 
   if (isFocused) {
-    setTimeout(() => checkUserAuth(), 1000);
+    setTimeout(() => checkUserAuth(), 1500);
   }
 
   async function checkUserAuth() {

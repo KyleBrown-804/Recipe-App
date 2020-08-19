@@ -5,8 +5,8 @@ import { signInWithEmail } from "../../Back-End/Auth/Authentication";
 
 export default function LoginScreen({ navigation }) {
   // hardcoded state for testing
-  const [email, setEmail] = useState("please@email.com");
-  const [password, setPass] = useState("dev1234!");
+  const [email, setEmail] = useState("Test@email.com");
+  const [password, setPass] = useState("Dev1234!");
 
   async function onLoginPress() {
     await signInWithEmail(email, password)

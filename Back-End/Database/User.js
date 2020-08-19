@@ -1,12 +1,11 @@
 import React from "react";
-import firebase from "firebase";
-import firestore from "firebase/firestore";
-
-const db = firebase.firestore();
+import firebase from "../../FirebaseConfig";
+import db from "./FireStoreConfig";
 
 export function newUser(name) {
   const userID = firebase.auth().currentUser.uid;
   const userEmail = firebase.auth().currentUser.email;
+
   db.collection("Users")
     .doc(userID)
     .set({

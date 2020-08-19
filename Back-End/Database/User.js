@@ -1,39 +1,24 @@
-import React, { useState } from "react";
-import firebase from "../../FirebaseConfig";
-import db from "./Config";
+import React from "react";
+import firebase from "firebase";
+import firestore from "firebase/firestore";
 
-export default function User() {
-  const [UID, setUID] = useState(null);
+const db = firebase.firestore();
 
-  async function getUID() {
-    await firebase
-      .auth()
-      .currentUser.uid.then((id) => {
-        setUID(id);
-        console.log("UID: ", UID);
-      })
-      .catch((err) => console.log(err));
-  }
-}
-
-// Update values to correspond to sign up procedure
-export default function newUser() {
-  try {
-    getUID();
-  } catch (error) {
-    console.log("failed to get UID: ", error);
-  }
-
+export function newUser(name) {
+  const userID = firebase.auth().currentUser.uid;
+  const userEmail = firebase.auth().currentUser.email;
   db.collection("Users")
-    .add({
+    .doc(userID)
+    .set({
       Age: 0,
-      ID: UID,
-      Name: "",
+      ID: userID,
+      Name: name,
+      email: userEmail,
     })
-    .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
+    .then(() => {
+      console.log("User: ", name, " added to the database!");
     })
     .catch((error) => {
-      console.error("Error adding document: ", error);
+      console.error("Error adding user: ", error);
     });
 }

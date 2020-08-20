@@ -1,6 +1,8 @@
 import React from "react";
 import firebase from "../../FirebaseConfig";
-import db from "./FireStoreConfig";
+import { db } from "./FireDBConfig";
+
+export const UID = firebase.auth().currentUser.uid;
 
 export function newUser(name) {
   const userID = firebase.auth().currentUser.uid;

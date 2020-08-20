@@ -2,7 +2,9 @@ import React from "react";
 import { Text, SafeAreaView, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "../../Styles/defaultStyle";
-import firebase from "../../FirebaseConfig";
+import { storage } from "../../Back-End/Database/FireDBConfig";
+import { UID } from "../../Back-End/Database/User";
+import { addRecipe } from "../../Back-End/Database/RecipeQueries";
 
 // expo
 import * as ImagePicker from "expo-image-picker";
@@ -11,6 +13,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
 export default class AddRecipeScreen extends React.Component {
+  Recipe = {
+    name: "",
+    calories: 0,
+    description: "",
+    ingredients: [],
+    imageUrl: "",
+  }
+  
   onChooseImagePress = async () => {
     console.log("Choose image pressed...");
     try {
@@ -21,7 +31,7 @@ export default class AddRecipeScreen extends React.Component {
         quality: 1,
       });
       if (!result.cancelled) {
-        this.uploadImage(result.uri, "test-image")
+        this.uploadImage(result.uri, UID, "camera-roll-image")
           .then(() => {
             Alert.alert("Image successfully uploaded!");
             console.log("Image successfully uploaded!");
@@ -43,7 +53,7 @@ export default class AddRecipeScreen extends React.Component {
         quality: 1,
       });
       if (!result.cancelled) {
-        this.uploadImage(result.uri, "test-image")
+        this.uploadImage(result.uri, UID, "camera-image")
           .then(() => {
             Alert.alert("Image successfully uploaded!");
             console.log("Image successfully uploaded!");
@@ -56,15 +66,21 @@ export default class AddRecipeScreen extends React.Component {
     }
   };
 
-  uploadImage = async (uri, imageName) => {
+  uploadImage = async (uri, userID, imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    const ref = firebase
-      .storage()
-      .ref()
-      .child("images/" + imageName);
-    return ref.put(blob);
+    const ref = storage.ref().child("images/");
+    const userRef = ref.child(userID + "/" + imageName);
+    userRef.put(blob);
+    userRef
+      .getDownloadURL()
+      .then((url) => {
+        console.log("image url: " + url);
+        this.Recipe.imageUrl = url
+        addRecipe(this.Recipe);
+      })
+      .catch((error) => console.log(error));
   };
   getPermissionAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);

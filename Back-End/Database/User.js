@@ -2,17 +2,24 @@ import React from "react";
 import firebase from "../../FirebaseConfig";
 import { db } from "./FireDBConfig";
 
-export const UID = firebase.auth().currentUser.uid;
+export async function getUserID() {
+  let UID = await firebase.auth().currentUser.uid;
+  if(UID != null) {
+    return UID;
+  }
+  else {
+    console.log("Couldn't retrieve current user uid.");
+  }
+}
 
-export function newUser(name) {
-  const userID = firebase.auth().currentUser.uid;
+export async function newUser(name) {
   const userEmail = firebase.auth().currentUser.email;
-
+  const UID = await getUserID();
   db.collection("Users")
-    .doc(userID)
+    .doc(UID)
     .set({
       Age: 0,
-      ID: userID,
+      ID: UID,
       Name: name,
       email: userEmail,
     })

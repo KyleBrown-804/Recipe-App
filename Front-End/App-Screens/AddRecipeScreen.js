@@ -3,7 +3,7 @@ import { Text, SafeAreaView, Button, Alert } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { styles } from "../../Styles/defaultStyle";
 import { storage } from "../../Back-End/Database/FireDBConfig";
-import { UID } from "../../Back-End/Database/User";
+import { getUserID } from "../../Back-End/Database/User";
 import { addRecipe } from "../../Back-End/Database/RecipeQueries";
 
 // expo
@@ -14,16 +14,18 @@ import Constants from "expo-constants";
 
 export default class AddRecipeScreen extends React.Component {
   Recipe = {
-    name: "",
-    calories: 0,
-    description: "",
-    ingredients: [],
+    name: "Spaghetti & Meatballs",
+    calories: 780,
+    description: "Classic spaghetti and meatballs with marina sauce!",
+    ingredients: ["Spaghetti noodles","Meatballs", "Marinara Sauce", "Parmasean cheese"],
     imageUrl: "",
+    associatedUserId: "",
   }
   
   onChooseImagePress = async () => {
     console.log("Choose image pressed...");
     try {
+      const UID = await getUserID();
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -45,7 +47,9 @@ export default class AddRecipeScreen extends React.Component {
   };
 
   onTakePhotoPress = async () => {
+    console.log("Take photo pressed...");
     try {
+      const UID = await getUserID();
       let result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -69,16 +73,17 @@ export default class AddRecipeScreen extends React.Component {
   uploadImage = async (uri, userID, imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-
     const ref = storage.ref().child("images/");
     const userRef = ref.child(userID + "/" + imageName);
+
+    this.Recipe.associatedUserId = userID;
     userRef.put(blob);
     userRef
       .getDownloadURL()
-      .then((url) => {
+      .then(async(url) => {
         console.log("image url: " + url);
         this.Recipe.imageUrl = url
-        addRecipe(this.Recipe);
+        await addRecipe(this.Recipe);
       })
       .catch((error) => console.log(error));
   };

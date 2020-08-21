@@ -16,15 +16,20 @@ export default function LoadingScreen({ navigation }) {
   }
 
   async function checkUserAuth() {
-    await firebase.auth().onAuthStateChanged(async (user) => {
-      if (user) {
-        console.log("user has been authenticated");
-        navigation.navigate("LoggedIn");
-      } else {
-        console.log("user not authenticated");
-        navigation.navigate("LoggedOut");
-      }
-    });
+    let checkUserAuth = await firebase.auth().currentUser;
+    if (checkUserAuth == null || checkUserAuth == undefined) {
+      navigation.navigate("LoggedOut");
+    } else {
+      await firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+          console.log("user has been authenticated");
+          navigation.navigate("LoggedIn");
+        } else {
+          console.log("user not authenticated");
+          navigation.navigate("LoggedOut");
+        }
+      });
+    }
   }
 
   return (

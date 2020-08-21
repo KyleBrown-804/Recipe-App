@@ -5,7 +5,6 @@ import { getUserID } from "./User";
 export async function addRecipe(Recipe) {
   if (Recipe != null || Recipe != undefined) {
     console.log("adding Recipe...");
-    console.log(Recipe);
 
     db.collection("Recipes")
       .doc()

@@ -17,11 +17,16 @@ export default class AddRecipeScreen extends React.Component {
     name: "Spaghetti & Meatballs",
     calories: 780,
     description: "Classic spaghetti and meatballs with marina sauce!",
-    ingredients: ["Spaghetti noodles","Meatballs", "Marinara Sauce", "Parmasean cheese"],
+    ingredients: [
+      "Spaghetti noodles",
+      "Meatballs",
+      "Marinara Sauce",
+      "Parmasean cheese",
+    ],
     imageUrl: "",
     associatedUserId: "",
-  }
-  
+  };
+
   onChooseImagePress = async () => {
     console.log("Choose image pressed...");
     try {
@@ -33,14 +38,14 @@ export default class AddRecipeScreen extends React.Component {
         quality: 1,
       });
       if (!result.cancelled) {
-        this.uploadImage(result.uri, UID, "camera-roll-image")
+        await this.uploadImage(result.uri, UID, "camera-roll-image")
           .then(() => {
             Alert.alert("Image successfully uploaded!");
             console.log("Image successfully uploaded!");
           })
           .catch((error) => Alert.alert(error));
       }
-      console.log(result);
+      console.log("cancelled?: " + result.cancelled);
     } catch (error) {
       console.log(error);
     }
@@ -57,35 +62,46 @@ export default class AddRecipeScreen extends React.Component {
         quality: 1,
       });
       if (!result.cancelled) {
-        this.uploadImage(result.uri, UID, "camera-image")
+        await this.uploadImage(result.uri, UID, "camera-image")
           .then(() => {
             Alert.alert("Image successfully uploaded!");
             console.log("Image successfully uploaded!");
           })
           .catch((error) => Alert.alert(error));
       }
-      console.log(result);
+      console.log("cancelled?: " + result.cancelled);
     } catch (error) {
       console.log(error);
     }
   };
 
   uploadImage = async (uri, userID, imageName) => {
+    console.log("Uploading image...");
+    this.Recipe.associatedUserId = userID;
     const response = await fetch(uri);
     const blob = await response.blob();
     const ref = storage.ref().child("images/");
-    const userRef = ref.child(userID + "/" + imageName);
+    const time = new Date().getTime();
+    const uploadTask = ref.child(userID + "/" + time + "-" + imageName);
 
-    this.Recipe.associatedUserId = userID;
-    userRef.put(blob);
-    userRef
-      .getDownloadURL()
-      .then(async(url) => {
-        console.log("image url: " + url);
-        this.Recipe.imageUrl = url
-        await addRecipe(this.Recipe);
+    await uploadTask
+      .put(blob)
+      .then(async () => {
+        console.log("blob added...");
+        await uploadTask
+          .getDownloadURL()
+          .then(async (url) => {
+            console.log("got download URL...");
+            this.Recipe.imageUrl = url;
+            await addRecipe(this.Recipe);
+          })
+          .catch((error) =>
+            console.log("Error retrieving downloadURL: " + error)
+          );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log("Error occured trying to upload image: " + error);
+      });
   };
   getPermissionAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);

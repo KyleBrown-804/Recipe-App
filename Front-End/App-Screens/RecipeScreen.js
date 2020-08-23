@@ -1,59 +1,57 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
-  View,
   SafeAreaView,
   FlatList,
   TouchableOpacity,
   Image,
-  ImageStore,
 } from "react-native";
 import { styles } from "../../Styles/defaultStyle";
+import { getAllRecipes } from "../../Back-End/Database/RecipeQueries";
 
 export default function RecipeScreen() {
-  const Recipes = [
-    {
-      id: "1",
-      title: "Chicken Katsu",
-      src: "../../assets/sampleFoods/ChickenKatsu.jpg",
-    },
-    { id: "2", title: "Sushi Roll", src: "../../assets/sampleFoods/Sushi.jpg" },
-    { id: "3", title: "Yakisoba", src: "../../assets/sampleFoods/Yakisoba.jpg" },
-    {
-      id: "4",
-      title: "Street Tacos",
-      src: "../../assets/sampleFoods/StreetTacos.jpg",
-    },
-    {
-      id: "5",
-      title: "Quesadillas",
-      src: "../../assets/sampleFoods/Quesadillas.jpg",
-    },
-    { id: "6", title: "Homemade Salsa", src: "../../assets/sampleFoods/Salsa.jpg" },
-    {
-      id: "7",
-      title: "Margaritas",
-      src: "../../assets/sampleFoods/Margaritas.jpg",
-    },
-  ];
+  let User_Recipes = [];
+  const [Recipes, setRecipes] = useState(User_Recipes);
 
-  const pressHandler = (title) => {
-    console.log(title);
+  useEffect(() => {
+    getRecipeList();
+  }, [Recipes]);
+
+  // try to collect Recipe objects into array here
+  async function getRecipeList() {
+    let retrieved_recipes = await getAllRecipes();
+    if (Recipes.length != retrieved_recipes.length) {
+      setRecipes(retrieved_recipes);
+    }
+    return retrieved_recipes.length;
+  }
+
+  const pressHandler = (name) => {
+    console.log(name);
   };
+
+  const noRecipes = (
+    <SafeAreaView style={styles.container}>
+      <Text>No Recipes :(</Text>
+    </SafeAreaView>
+  );
+
+  if (Recipes.length <= 0) {
+    return noRecipes;
+  }
 
   return (
     <SafeAreaView style={styles.recipesContainer}>
       <FlatList
         data={Recipes}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.calories.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} onPress={() => pressHandler(item.title)}>
-            <Image
-              style={styles.cardImage}
-              source={require("../../assets/sampleFoods/Sushi.jpg")}
-            />
-            <Text style={styles.cardText}>{item.title}</Text>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => pressHandler(item.name)}
+          >
+            <Image style={styles.cardImage} source={{ uri: item.imageURL }} />
+            <Text style={styles.cardText}>{item.name}</Text>
           </TouchableOpacity>
         )}
       />

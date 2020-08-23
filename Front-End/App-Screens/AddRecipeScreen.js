@@ -14,6 +14,7 @@ import Constants from "expo-constants";
 
 export default class AddRecipeScreen extends React.Component {
   Recipe = {
+    key: "",
     name: "Spaghetti & Meatballs",
     calories: 780,
     description: "Classic spaghetti and meatballs with marina sauce!",
@@ -23,7 +24,7 @@ export default class AddRecipeScreen extends React.Component {
       "Marinara Sauce",
       "Parmasean cheese",
     ],
-    imageUrl: "",
+    imageURL: "",
     associatedUserId: "",
   };
 
@@ -92,7 +93,7 @@ export default class AddRecipeScreen extends React.Component {
           .getDownloadURL()
           .then(async (url) => {
             console.log("got download URL...");
-            this.Recipe.imageUrl = url;
+            this.Recipe.imageURL = url;
             await addRecipe(this.Recipe);
           })
           .catch((error) =>

@@ -2,6 +2,7 @@ import React from "react";
 import firebase from "../../FirebaseConfig";
 import { db } from "./FireDBConfig";
 
+// handle no user error better
 export async function getUserID() {
   let UID = await firebase.auth().currentUser.uid;
   if(UID != null) {

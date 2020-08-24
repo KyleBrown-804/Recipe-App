@@ -44,7 +44,7 @@ export default function RecipeScreen() {
     <SafeAreaView style={styles.recipesContainer}>
       <FlatList
         data={Recipes}
-        keyExtractor={(item) => item.calories.toString()}
+        keyExtractor={(item) => item.recipeID}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}

@@ -14,7 +14,7 @@ import Constants from "expo-constants";
 
 export default class AddRecipeScreen extends React.Component {
   Recipe = {
-    key: "",
+    recipeID: "",
     name: "Spaghetti & Meatballs",
     calories: 780,
     description: "Classic spaghetti and meatballs with marina sauce!",

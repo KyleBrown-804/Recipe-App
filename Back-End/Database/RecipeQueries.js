@@ -5,28 +5,21 @@ import { getUserID } from "./User";
 export async function addRecipe(Recipe) {
   const userID = await getUserID();
 
-  /* NOTE: you need to update path to match new structure!
-  
-    new structure: Recipes/userID/User-Recipes/the_new_recipe_here
-
-    this way all user recipes can be accessed faster from one collection
-    instead of searching through all user's recipes.
-
-  */
   if (Recipe != null || Recipe != undefined) {
     console.log("adding Recipe...");
-
-    console.log("Recipe: " + JSON.stringify(Recipe));
-    await db
+    const newDocRef = await db
       .collection("Recipes")
       .doc(userID)
       .collection("User-Recipes")
-      .doc()
+      .doc();
+    Recipe.recipeID = newDocRef.id;
+
+    await newDocRef
       .set(Recipe)
       .then(() => {
         console.log("Recipe added to the database!");
       })
-      .catch((error) => {
+      .catch(() => {
         console.log("Error occured trying to add recipe to the db: " + error);
       });
   } else {

@@ -64,8 +64,7 @@ export const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
   },
-
-  //   SettingScreen.js
+  // Settings.js ---------------------------------------
   settingsText: {
     fontSize: 18,
     alignSelf: "center",
@@ -78,12 +77,102 @@ export const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
   },
-  settingsIcon: {
-  },
   settingsHeader: {
     fontSize: 20,
     color: "gray",
     textAlign: "left",
     padding: 10,
+  },
+
+  // AddRecipeScreen.js ---------------------------------------
+  formHeader: {
+    fontSize: 24,
+    color: "gray",
+    textAlign: "center",
+    padding: 10,
+  },
+  formName: {
+    flex: 1,
+    fontSize: 22,
+    textAlign: "left",
+    paddingLeft: 8,
+    paddingBottom: 5,
+  },
+  cameraIcons: {
+    paddingHorizontal: 50,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  submitButton: {
+    width: 150,
+    height: 50,
+    alignContent: "center",
+    alignSelf: "center",
+    borderRadius: 5,
+    borderWidth: 2,
+    justifyContent: "center",
+    backgroundColor: "lightgray",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  // form items -------------------------
+  formSection: {
+    padding: 5,
+    paddingBottom: 10,
+    marginBottom: 10,
+  },
+  formItem: {
+    maxWidth: "95%",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "space-between",
+  },
+  formItemRow: {
+    width: "95%",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "space-between",
+  },
+  formItemColumn: {
+    width: "95%",
+    flex: 1,
+    flexDirection: "column",
+    alignSelf: "center",
+    justifyContent: "space-between",
+  },
+
+  // text inputs -------------------------
+  smallTextInput: {
+    flex: 1,
+    fontSize: 18,
+    alignSelf: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    textAlign: "center",
+  },
+  textInput: {
+    width: "auto",
+    flex: 3,
+    fontSize: 18,
+    alignSelf: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    textAlign: "center",
+  },
+  largeInput: {
+    flex: 1,
+    width: "95%",
+    fontSize: 18,
+    alignSelf: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    textAlign: "center",
   },
 });

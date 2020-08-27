@@ -13,9 +13,9 @@ export default function RecipeScreen() {
   let User_Recipes = [];
   const [Recipes, setRecipes] = useState(User_Recipes);
 
-  useEffect(() => {
-    getRecipeList();
-  }, [Recipes]);
+  // useEffect(() => {
+  //   getRecipeList();
+  // }, [Recipes]);
 
   // try to collect Recipe objects into array here
   async function getRecipeList() {

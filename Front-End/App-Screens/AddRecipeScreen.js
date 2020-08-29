@@ -15,7 +15,6 @@ export default class AddRecipeScreen extends React.Component {
     this.state = {
       value: "",
       previewUri: "",
-      ingredient: {},
       ingredientArr: [],
     };
   }
@@ -35,20 +34,22 @@ export default class AddRecipeScreen extends React.Component {
   deleteIngredient = (index) => {
     console.log("remove ingredient entry");
     this.state.ingredientArr.splice(index, 1);
-    this.Recipe.ingredients.splice(index, 1);
     this.setState({ ingredientArr: this.state.ingredientArr });
     console.log(
-      "Ingredients: " + "\n" + JSON.stringify(this.Recipe.ingredients)
+      "Ingredients: " + "\n" + JSON.stringify(this.state.ingredientArr)
     );
   };
   addIngredient = () => {
     console.log("add ingredient entry");
     this.setState({
-      ingredientArr: [...this.state.ingredientArr, this.state.ingredient],
+      ingredientArr: [
+        ...this.state.ingredientArr,
+        { name: "", count: "", units: "" },
+      ],
     });
     this.Recipe.ingredients = this.state.ingredientArr;
     console.log(
-      "Ingredients: " + "\n" + JSON.stringify(this.Recipe.ingredients)
+      "Ingredients: " + "\n" + JSON.stringify(this.state.ingredientArr)
     );
   };
   onIngredientHandler = (input, index) => {
@@ -60,7 +61,7 @@ export default class AddRecipeScreen extends React.Component {
     this.setState({ ingredientArr: this.state.ingredientArr });
   };
   onUnitHandler = (input, index) => {
-    this.state.ingredientArr[index].unit = input;
+    this.state.ingredientArr[index].units = input;
     this.setState({ ingredientArr: this.state.ingredientArr });
   };
 
@@ -70,7 +71,11 @@ export default class AddRecipeScreen extends React.Component {
       Add Form validation logic here
     */
     console.log("submit button pressed");
+
+    this.Recipe.ingredients = this.state.ingredientArr;
+    console.log(JSON.stringify(this.Recipe.ingredients));
   };
+
   onChooseImagePress = async () => {
     await chooseImage(this.Recipe);
   };
@@ -171,7 +176,9 @@ export default class AddRecipeScreen extends React.Component {
                     size={30}
                     color="#ff0f0f"
                     backgroundColor="red"
-                    onPress={() => this.deleteIngredient()}
+                    onPress={() => {
+                      this.deleteIngredient(key);
+                    }}
                   ></MaterialCommunityIcons>
                 </View>
               );

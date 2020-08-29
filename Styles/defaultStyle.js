@@ -175,4 +175,29 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: "center",
   },
+  //  ingredient fields -----------------------------
+  inputsContainer: {
+    flexDirection: "row",
+    padding: 15,
+  },
+  largeInputContainer: {
+    width: "40%",
+    flex: 3,
+    marginRight: 5, 
+  },
+  inputContainer: {
+    width: "40%",
+    flex: 2,
+    marginRight: 5, 
+  },
+  ingredientField: {
+    paddingHorizontal: 15,
+    width: "100%",
+    height: 50,
+    fontSize: 18,
+    borderWidth: 1,
+    borderRadius: 5,
+    textAlign: "center",
+  }
+
 });

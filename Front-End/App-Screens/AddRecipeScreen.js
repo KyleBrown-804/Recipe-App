@@ -15,6 +15,8 @@ export default class AddRecipeScreen extends React.Component {
     this.state = {
       value: "",
       previewUri: "",
+      ingredient: {},
+      ingredientArr: [],
     };
   }
 
@@ -25,12 +27,44 @@ export default class AddRecipeScreen extends React.Component {
     servings: 0,
     cookTime: "",
     description: "",
-    ingredients: [""],
+    ingredients: [],
     directions: "",
-
     imageURL: "",
   };
 
+  deleteIngredient = (index) => {
+    console.log("remove ingredient entry");
+    this.state.ingredientArr.splice(index, 1);
+    this.Recipe.ingredients.splice(index, 1);
+    this.setState({ ingredientArr: this.state.ingredientArr });
+    console.log(
+      "Ingredients: " + "\n" + JSON.stringify(this.Recipe.ingredients)
+    );
+  };
+  addIngredient = () => {
+    console.log("add ingredient entry");
+    this.setState({
+      ingredientArr: [...this.state.ingredientArr, this.state.ingredient],
+    });
+    this.Recipe.ingredients = this.state.ingredientArr;
+    console.log(
+      "Ingredients: " + "\n" + JSON.stringify(this.Recipe.ingredients)
+    );
+  };
+  onIngredientHandler = (input, index) => {
+    this.state.ingredientArr[index].name = input;
+    this.setState({ ingredientArr: this.state.ingredientArr });
+  };
+  onCountHandler = (input, index) => {
+    this.state.ingredientArr[index].count = input;
+    this.setState({ ingredientArr: this.state.ingredientArr });
+  };
+  onUnitHandler = (input, index) => {
+    this.state.ingredientArr[index].unit = input;
+    this.setState({ ingredientArr: this.state.ingredientArr });
+  };
+
+  // ==================================================
   onSubmitButtonPress = () => {
     /*
       Add Form validation logic here
@@ -89,32 +123,73 @@ export default class AddRecipeScreen extends React.Component {
               {this.state.value.length}/80 characters left
             </Text>
           </View>
-          
-          {/* Use Formik in order to create dynamic form entries */}
-            <Formik>
-              
-            </Formik>
+
           {/* INGREDIENTS */}
-          {
-            <View style={[styles.formItemColumn, styles.formSection]}>
-              <Text style={styles.formName}>Ingredients:</Text>
-              <View style={styles.formItemRow}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Ingredient"
-                  maxLength={25}
-                ></TextInput>
-                <TextInput
-                  style={styles.smallTextInput}
-                  placeholder="Count"
-                ></TextInput>
-                <TextInput
-                  style={styles.smallTextInput}
-                  placeholder="Units"
-                ></TextInput>
-              </View>
-            </View>
-          }
+
+          <View style={[styles.formItemColumn, styles.formSection]}>
+            <Text style={styles.formName}>Ingredients:</Text>
+
+            {this.state.ingredientArr.map((ingredient, key) => {
+              return (
+                <View key={key} style={styles.inputsContainer}>
+                  <View style={styles.largeInputContainer}>
+                    <TextInput
+                      style={styles.ingredientField}
+                      value={ingredient.key}
+                      placeholder="Name"
+                      maxLength={25}
+                      onChangeText={(name) =>
+                        this.onIngredientHandler(name, key)
+                      }
+                    ></TextInput>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.ingredientField}
+                      placeholder="#"
+                      onChangeText={(count) => {
+                        this.onCountHandler(count, key);
+                      }}
+                    ></TextInput>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.ingredientField}
+                      placeholder="Units"
+                      onChangeText={(unit) => {
+                        this.onUnitHandler(unit, key);
+                      }}
+                    ></TextInput>
+                  </View>
+                  <MaterialCommunityIcons
+                    style={{
+                      flex: 1,
+                      alignSelf: "center",
+                      paddingLeft: 5,
+                    }}
+                    name="minus-circle"
+                    size={30}
+                    color="#ff0f0f"
+                    backgroundColor="red"
+                    onPress={() => this.deleteIngredient()}
+                  ></MaterialCommunityIcons>
+                </View>
+              );
+            })}
+            <MaterialCommunityIcons
+              style={{
+                flex: 1,
+                alignSelf: "auto",
+                paddingLeft: 8,
+                paddingTop: 10,
+              }}
+              name="plus-circle"
+              size={30}
+              color="black"
+              backgroundColor="#89e8e8"
+              onPress={() => this.addIngredient()}
+            ></MaterialCommunityIcons>
+          </View>
 
           {/* DIRECTIONS */}
           <View style={[styles.formItemColumn, styles.formSection]}>
@@ -183,7 +258,6 @@ export default class AddRecipeScreen extends React.Component {
           </View>
 
           <TouchableOpacity
-            onLo
             style={styles.submitButton}
             onPress={() => this.onSubmitButtonPress()}
           >

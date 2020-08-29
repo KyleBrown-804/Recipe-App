@@ -148,8 +148,11 @@ export const styles = StyleSheet.create({
   // text inputs -------------------------
   smallTextInput: {
     flex: 1,
+    width: "100%",
+    height: 40,
     fontSize: 18,
     alignSelf: "center",
+    paddingHorizontal: 15,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
@@ -157,6 +160,7 @@ export const styles = StyleSheet.create({
   },
   textInput: {
     width: "auto",
+    height: 40,
     flex: 3,
     fontSize: 18,
     alignSelf: "center",
@@ -168,36 +172,37 @@ export const styles = StyleSheet.create({
   largeInput: {
     flex: 1,
     width: "95%",
+    height: 40,
     fontSize: 18,
     alignSelf: "center",
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
-    textAlign: "center",
+    textAlign: "left",
+    paddingLeft: 5,
   },
   //  ingredient fields -----------------------------
   inputsContainer: {
     flexDirection: "row",
-    padding: 15,
+    padding: 10,
   },
   largeInputContainer: {
     width: "40%",
-    flex: 3,
-    marginRight: 5, 
+    flex: 4,
+    marginRight: 5,
   },
   inputContainer: {
     width: "40%",
     flex: 2,
-    marginRight: 5, 
+    marginRight: 5,
   },
   ingredientField: {
     paddingHorizontal: 15,
     width: "100%",
-    height: 50,
+    height: 40,
     fontSize: 18,
     borderWidth: 1,
     borderRadius: 5,
     textAlign: "center",
-  }
-
+  },
 });

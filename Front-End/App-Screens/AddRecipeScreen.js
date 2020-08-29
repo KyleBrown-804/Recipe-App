@@ -4,6 +4,7 @@ import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
 import { styles } from "../../Styles/defaultStyle";
 import { chooseImage, takePhoto } from "../../Back-End/Database/Images";
 import { Formik, Form, FieldArray } from "formik";
+import shortid, { generate } from "shortid";
 
 // expo
 import * as Permissions from "expo-permissions";
@@ -31,20 +32,25 @@ export default class AddRecipeScreen extends React.Component {
     imageURL: "",
   };
 
-  deleteIngredient = (index) => {
+  deleteIngredient = (loc) => {
     console.log("remove ingredient entry");
-    this.state.ingredientArr.splice(index, 1);
-    this.setState({ ingredientArr: this.state.ingredientArr });
+    console.log(" index: " + loc);
+    this.setState({
+      ingredientArr: this.state.ingredientArr.filter(
+        (item, index) => index !== loc
+      ),
+    });
     console.log(
       "Ingredients: " + "\n" + JSON.stringify(this.state.ingredientArr)
     );
   };
   addIngredient = () => {
     console.log("add ingredient entry");
+    const ingredientID = shortid.generate();
     this.setState({
       ingredientArr: [
         ...this.state.ingredientArr,
-        { name: "", count: "", units: "" },
+        { id: ingredientID, name: "", count: "", units: "" },
       ],
     });
     this.Recipe.ingredients = this.state.ingredientArr;
@@ -114,7 +120,6 @@ export default class AddRecipeScreen extends React.Component {
             <Text style={styles.formName}>Description:</Text>
             <TextInput
               style={styles.largeInput}
-              placeholder="limit 80 characters"
               numberOfLines={2}
               maxLength={80}
               value={this.state.value}
@@ -136,7 +141,7 @@ export default class AddRecipeScreen extends React.Component {
 
             {this.state.ingredientArr.map((ingredient, key) => {
               return (
-                <View key={key} style={styles.inputsContainer}>
+                <View key={ingredient.id} style={styles.inputsContainer}>
                   <View style={styles.largeInputContainer}>
                     <TextInput
                       style={styles.ingredientField}
@@ -206,7 +211,7 @@ export default class AddRecipeScreen extends React.Component {
               placeholder="How do you make it?"
               maxLength={2200}
               multiline={true}
-              numberOfLines={4}
+              numberOfLines={2}
               onChangeText={(input) => (this.Recipe.directions = input)}
             ></TextInput>
           </View>
@@ -214,22 +219,28 @@ export default class AddRecipeScreen extends React.Component {
           {/* ADDITIONAL INFO */}
           <View style={[styles.formItemColumn, styles.formSection]}>
             <Text style={styles.formName}>Additional Info:</Text>
-            <View style={styles.formItemRow}>
-              <TextInput
-                style={styles.smallTextInput}
-                placeholder="Servings"
-                onChangeText={(input) => (this.Recipe.servings = input)}
-              ></TextInput>
-              <TextInput
-                style={styles.smallTextInput}
-                placeholder="Calories"
-                onChangeText={(input) => (this.Recipe.calories = input)}
-              ></TextInput>
-              <TextInput
-                style={styles.smallTextInput}
-                placeholder="Cook Time"
-                onChangeText={(input) => (this.Recipe.cookTime = input)}
-              ></TextInput>
+            <View style={styles.inputsContainer}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.smallTextInput}
+                  placeholder="Servings"
+                  onChangeText={(input) => (this.Recipe.servings = input)}
+                ></TextInput>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.smallTextInput}
+                  placeholder="Calories"
+                  onChangeText={(input) => (this.Recipe.calories = input)}
+                ></TextInput>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.smallTextInput}
+                  placeholder="Time"
+                  onChangeText={(input) => (this.Recipe.cookTime = input)}
+                ></TextInput>
+              </View>
             </View>
           </View>
 

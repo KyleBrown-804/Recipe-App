@@ -1,21 +1,37 @@
 import React from "react";
-import { Text, SafeAreaView, TextInput, View, Image } from "react-native";
-import { TouchableOpacity, ScrollView } from "react-native-gesture-handler";
+import {
+  Text,
+  SafeAreaView,
+  TextInput,
+  View,
+  Image,
+  Modal,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { styles } from "../../Styles/defaultStyle";
 import { chooseImage, takePhoto } from "../../Back-End/Database/Images";
 import { Formik, Form, FieldArray } from "formik";
-import shortid, { generate } from "shortid";
+import { generate } from "shortid";
 
 // expo
 import * as Permissions from "expo-permissions";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Button } from "react-native-paper";
+
+const MODAL_HEIGHT = Dimensions.get("window").height / 3;
 
 export default class AddRecipeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       value: "",
-      previewUri: "",
+      previewUrl: "",
+      confirmModal: false,
       ingredientArr: [],
     };
   }
@@ -29,24 +45,29 @@ export default class AddRecipeScreen extends React.Component {
     description: "",
     ingredients: [],
     directions: "",
-    imageURL: "",
+    imageUrl: "",
   };
 
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+  getPermissionAsync = async () => {
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  };
+
+  /*
+    Ingredients fields functions
+    ===================================================
+  */
   deleteIngredient = (loc) => {
-    console.log("remove ingredient entry");
-    console.log(" index: " + loc);
     this.setState({
       ingredientArr: this.state.ingredientArr.filter(
         (item, index) => index !== loc
       ),
     });
-    console.log(
-      "Ingredients: " + "\n" + JSON.stringify(this.state.ingredientArr)
-    );
   };
   addIngredient = () => {
-    console.log("add ingredient entry");
-    const ingredientID = shortid.generate();
+    const ingredientID = generate();
     this.setState({
       ingredientArr: [
         ...this.state.ingredientArr,
@@ -54,9 +75,6 @@ export default class AddRecipeScreen extends React.Component {
       ],
     });
     this.Recipe.ingredients = this.state.ingredientArr;
-    console.log(
-      "Ingredients: " + "\n" + JSON.stringify(this.state.ingredientArr)
-    );
   };
   onIngredientHandler = (input, index) => {
     this.state.ingredientArr[index].name = input;
@@ -71,7 +89,10 @@ export default class AddRecipeScreen extends React.Component {
     this.setState({ ingredientArr: this.state.ingredientArr });
   };
 
-  // ==================================================
+  /*
+    Button on press handlers
+    ===================================================
+  */
   onSubmitButtonPress = () => {
     /*
       Add Form validation logic here
@@ -79,28 +100,22 @@ export default class AddRecipeScreen extends React.Component {
     console.log("submit button pressed");
 
     this.Recipe.ingredients = this.state.ingredientArr;
-    console.log(JSON.stringify(this.Recipe.ingredients));
+    // if validation clears
+    this.setModalVisible(true);
   };
-
+  setModalVisible = (visible) => {
+    this.setState({ confirmModal: visible });
+  };
   onChooseImagePress = async () => {
     await chooseImage(this.Recipe);
   };
-
   onTakePhotoPress = async () => {
     await takePhoto(this.Recipe);
   };
 
-  getPermissionAsync = async () => {
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  };
-
-  componentDidMount() {
-    this.getPermissionAsync();
-  }
-
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView>
         <ScrollView>
           <Text style={styles.formHeader}>Add Your Recipe!</Text>
 
@@ -269,20 +284,76 @@ export default class AddRecipeScreen extends React.Component {
                 ></MaterialCommunityIcons>
               </TouchableOpacity>
             </View>
-            <Image
-              source={require("../../assets/sampleFoods/Sushi.jpg")}
-              style={[styles.cardImage, { borderRadius: 10 }]}
-            ></Image>
+            {this.state.previewUrl === "" ? (
+              <View
+                style={[
+                  styles.cardImage,
+                  {
+                    justifyContent: "center",
+                    borderRadius: 10,
+                    backgroundColor: "lightgray",
+                  },
+                ]}
+              >
+                <MaterialCommunityIcons
+                  name="image-area"
+                  size={100}
+                  style={{ alignSelf: "center" }}
+                ></MaterialCommunityIcons>
+                <Text style={{ fontSize: 22, textAlign: "center" }}>
+                  Image Preview
+                </Text>
+              </View>
+            ) : (
+              <Image
+                source={{ uri: this.state.previewUrl }}
+                style={[styles.cardImage, { borderRadius: 10 }]}
+              ></Image>
+            )}
           </View>
-
+          {/* SUBMIT BUTTON */}
           <TouchableOpacity
             style={styles.submitButton}
-            onPress={() => this.onSubmitButtonPress()}
+            onPress={() => {
+              this.onSubmitButtonPress();
+            }}
           >
             <Text style={{ textAlign: "center", fontSize: 20 }}>
               Submit Recipe!
             </Text>
           </TouchableOpacity>
+          {/* CONFIRMATION MODAL */}
+          <Modal
+            visible={this.state.confirmModal}
+            transparent={true}
+            onRequestClose={() => this.setState({ confirmModal: false })}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalView}>
+                <Text style={styles.formHeader}>
+                  Are you ready to post {this.Recipe.name}?
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => this.setModalVisible(false)}
+                  >
+                    <Text style={{ textAlign: "center", fontSize: 20 }}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.modalButton}
+                    onPress={() => console.log("submit data")}
+                  >
+                    <Text style={{ textAlign: "center", fontSize: 20 }}>
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </SafeAreaView>
     );

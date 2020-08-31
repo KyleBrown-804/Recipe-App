@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 const majorColor = "#89e8e8";
@@ -19,6 +19,9 @@ const tetradic1 = "#e8a189";
 const tetradic2 = "#e8d089";
 const tetradic3 = "#b989e8";
 
+const { width, height } = Dimensions.get("window");
+const MODAL_HEIGHT = height / 3;
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -27,7 +30,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  // Recipes.js ---------------------------------------
+  // Recipes.js ============================================
   item: {
     marginTop: 24,
     padding: 30,
@@ -64,7 +67,7 @@ export const styles = StyleSheet.create({
     height: 200,
     resizeMode: "cover",
   },
-  // Settings.js ---------------------------------------
+  // Settings.js ==============================================
   settingsText: {
     fontSize: 18,
     alignSelf: "center",
@@ -84,7 +87,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
 
-  // AddRecipeScreen.js ---------------------------------------
+  // AddRecipeScreen.js ================================================
   formHeader: {
     fontSize: 24,
     color: "gray",
@@ -102,6 +105,36 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 50,
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  imagePreview: {
+    backgroundColor: "gray",
+    alignContent: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#00000080",
+  },
+  modalView: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: 300,
+    height: MODAL_HEIGHT,
+  },
+  modalButton: {
+    flex: 1,
+    height: 50,
+    alignSelf: "center",
+    borderRadius: 5,
+    borderWidth: 2,
+    justifyContent: "center",
+    backgroundColor: "lightgray",
+    paddingHorizontal: 15,
+    marginTop: 25,
+    marginHorizontal: 15
   },
   submitButton: {
     width: 150,

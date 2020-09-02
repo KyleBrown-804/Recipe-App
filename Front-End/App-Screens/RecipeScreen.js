@@ -13,9 +13,9 @@ export default function RecipeScreen() {
   let User_Recipes = [];
   const [Recipes, setRecipes] = useState(User_Recipes);
 
-  // useEffect(() => {
-  //   getRecipeList();
-  // }, [Recipes]);
+  useEffect(() => {
+    getRecipeList();
+  }, [Recipes]);
 
   // try to collect Recipe objects into array here
   async function getRecipeList() {
@@ -50,7 +50,7 @@ export default function RecipeScreen() {
             style={styles.card}
             onPress={() => pressHandler(item.name)}
           >
-            <Image style={styles.cardImage} source={{ uri: item.imageURL }} />
+            <Image style={styles.cardImage} source={{ uri: item.imageUrl }} />
             <Text style={styles.cardText}>{item.name}</Text>
           </TouchableOpacity>
         )}

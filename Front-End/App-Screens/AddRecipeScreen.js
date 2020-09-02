@@ -6,31 +6,42 @@ import {
   View,
   Image,
   Modal,
-  Dimensions,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { styles } from "../../Styles/defaultStyle";
-import { chooseImage, takePhoto } from "../../Back-End/Database/Images";
-import { Formik, Form, FieldArray } from "formik";
+import {
+  chooseImage,
+  takePhoto,
+  uploadRecipe,
+} from "../../Back-End/Database/Images";
 import { generate } from "shortid";
-
+import { string, number, array } from "yup";
 // expo
 import * as Permissions from "expo-permissions";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Button } from "react-native-paper";
 
-const MODAL_HEIGHT = Dimensions.get("window").height / 3;
+let yup = require("yup");
+
+let recipeSchema = yup.object().shape({
+  recipeID: yup.string().notRequired(),
+  name: yup.string().required(),
+  calories: yup.number().notRequired(),
+  servings: yup.number().required(),
+  cookTime: yup.string().notRequired(),
+  description: yup.string().max(80).required(),
+  ingredients: yup.array().required(),
+  directions: yup.string().max(2200).required(),
+  imageUrl: yup.string().notRequired(),
+});
 
 export default class AddRecipeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: "",
-      previewUrl: "",
+      charCount: "",
+      previewUri: "",
       confirmModal: false,
       ingredientArr: [],
     };
@@ -93,24 +104,55 @@ export default class AddRecipeScreen extends React.Component {
     Button on press handlers
     ===================================================
   */
-  onSubmitButtonPress = () => {
-    /*
-      Add Form validation logic here
-    */
-    console.log("submit button pressed");
+  submitRecipe = async () => {
+    await uploadRecipe(this.state.previewUri, this.Recipe)
+      .then(() => {
+        Alert.alert("Your recipe has been added successfully!");
+        this.setModalVisible(false);
+      })
+      .catch(() => {
+        Alert.alert(
+          "An error occured trying to add your recipe, please try again!"
+        );
+        console.log("Error uploading recipe");
+      });
+  };
+  onSubmitButtonPress = async () => {
+    let validated = false;
 
-    this.Recipe.ingredients = this.state.ingredientArr;
-    // if validation clears
-    this.setModalVisible(true);
+    if (this.state.previewUri !== "") {
+      this.Recipe.ingredients = this.state.ingredientArr;
+      await recipeSchema
+        .validate(this.Recipe)
+        .then(() => {
+          validated = true;
+        })
+        .catch((err) => {
+          console.log("validation error: " + err);
+        });
+    } else {
+      Alert.alert("You must supply an image to accompany your recipe");
+    }
+    if (validated) {
+      this.setModalVisible(true);
+    }
   };
   setModalVisible = (visible) => {
     this.setState({ confirmModal: visible });
   };
   onChooseImagePress = async () => {
-    await chooseImage(this.Recipe);
+    await chooseImage(this.Recipe).then((uri) => {
+      if (uri !== "") {
+        this.setState({ previewUri: uri });
+      }
+    });
   };
   onTakePhotoPress = async () => {
-    await takePhoto(this.Recipe);
+    await takePhoto(this.Recipe).then((uri) => {
+      if (uri !== "") {
+        this.setState({ previewUri: uri });
+      }
+    });
   };
 
   render() {
@@ -140,17 +182,16 @@ export default class AddRecipeScreen extends React.Component {
               value={this.state.value}
               multiline={true}
               onChangeText={(value) => {
-                this.setState({ value });
+                this.setState({ charCount: value });
                 this.Recipe.description = value;
               }}
             ></TextInput>
             <Text style={{ paddingLeft: 8 }}>
-              {this.state.value.length}/80 characters left
+              {this.state.charCount.length}/80 characters left
             </Text>
           </View>
 
           {/* INGREDIENTS */}
-
           <View style={[styles.formItemColumn, styles.formSection]}>
             <Text style={styles.formName}>Ingredients:</Text>
 
@@ -284,7 +325,7 @@ export default class AddRecipeScreen extends React.Component {
                 ></MaterialCommunityIcons>
               </TouchableOpacity>
             </View>
-            {this.state.previewUrl === "" ? (
+            {this.state.previewUri === "" ? (
               <View
                 style={[
                   styles.cardImage,
@@ -306,11 +347,12 @@ export default class AddRecipeScreen extends React.Component {
               </View>
             ) : (
               <Image
-                source={{ uri: this.state.previewUrl }}
+                source={{ uri: this.state.previewUri }}
                 style={[styles.cardImage, { borderRadius: 10 }]}
               ></Image>
             )}
           </View>
+
           {/* SUBMIT BUTTON */}
           <TouchableOpacity
             style={styles.submitButton}
@@ -322,6 +364,7 @@ export default class AddRecipeScreen extends React.Component {
               Submit Recipe!
             </Text>
           </TouchableOpacity>
+
           {/* CONFIRMATION MODAL */}
           <Modal
             visible={this.state.confirmModal}
@@ -344,7 +387,7 @@ export default class AddRecipeScreen extends React.Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.modalButton}
-                    onPress={() => console.log("submit data")}
+                    onPress={() => this.submitRecipe()}
                   >
                     <Text style={{ textAlign: "center", fontSize: 20 }}>
                       Submit

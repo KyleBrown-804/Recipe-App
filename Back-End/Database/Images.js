@@ -11,6 +11,7 @@ export async function chooseImage(Recipe) {
   console.log("Choose image pressed...");
   try {
     const UID = await getUserID();
+    let uri = "";
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -18,14 +19,9 @@ export async function chooseImage(Recipe) {
       quality: 1,
     });
     if (!result.cancelled) {
-      await uploadImage(result.uri, UID, Recipe)
-        .then(() => {
-          Alert.alert("Image successfully uploaded!");
-          console.log("Image successfully uploaded!");
-        })
-        .catch((error) => Alert.alert(error));
+      uri = result.uri;
     }
-    console.log("cancelled?: " + result.cancelled);
+    return uri;
   } catch (error) {
     console.log(error);
   }
@@ -35,6 +31,7 @@ export async function takePhoto(Recipe) {
   console.log("Take photo pressed...");
   try {
     const UID = await getUserID();
+    let uri = "";
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -42,21 +39,18 @@ export async function takePhoto(Recipe) {
       quality: 1,
     });
     if (!result.cancelled) {
-      await uploadImage(result.uri, UID, Recipe)
-        .then(() => {
-          Alert.alert("Image successfully uploaded!");
-          console.log("Image successfully uploaded!");
-        })
-        .catch((error) => Alert.alert(error));
+      uri = result.uri;
     }
-    console.log("cancelled?: " + result.cancelled);
+    return uri;
   } catch (error) {
     console.log(error);
   }
 }
 
-async function uploadImage(uri, userID, Recipe) {
+export async function uploadRecipe(uri, Recipe) {
   console.log("Uploading image...");
+  console.log("uri " + uri);
+  const userID = await getUserID();
   const response = await fetch(uri);
   const blob = await response.blob();
   const ref = storage.ref().child("images/");
@@ -71,7 +65,8 @@ async function uploadImage(uri, userID, Recipe) {
         .getDownloadURL()
         .then(async (url) => {
           console.log("got download URL...");
-          Recipe.imageURL = url;
+          console.log(url);
+          Recipe.imageUrl = url;
           await addRecipe(Recipe);
         })
         .catch((error) =>

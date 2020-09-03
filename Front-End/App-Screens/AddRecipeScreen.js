@@ -17,22 +17,28 @@ import {
   uploadRecipe,
 } from "../../Back-End/Database/Images";
 import { generate } from "shortid";
-import { string, number, array } from "yup";
+import * as yup from "yup";
 // expo
 import * as Permissions from "expo-permissions";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-let yup = require("yup");
-
 let recipeSchema = yup.object().shape({
   recipeID: yup.string().notRequired(),
-  name: yup.string().required(),
-  calories: yup.number().notRequired(),
-  servings: yup.number().required(),
-  cookTime: yup.string().notRequired(),
-  description: yup.string().max(80).required(),
-  ingredients: yup.array().required(),
-  directions: yup.string().max(2200).required(),
+  name: yup.string().min(3).max(50).required("Name required!"),
+  calories: yup
+    .number()
+    .positive("Calories must be positive")
+    .integer("Calories must be a whole number")
+    .notRequired(),
+  servings: yup
+    .number()
+    .positive()
+    .integer()
+    .required("Serving amount required!"),
+  cookTime: yup.string().max(30).notRequired(),
+  description: yup.string().max(80).required("Description required!"),
+  ingredients: yup.array().required("At least one ingredient required!"),
+  directions: yup.string().max(2200).required("Directions required!"),
   imageUrl: yup.string().notRequired(),
 });
 
@@ -40,7 +46,8 @@ export default class AddRecipeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      charCount: "",
+      descCount: "",
+      direCount: "",
       previewUri: "",
       confirmModal: false,
       ingredientArr: [],
@@ -114,7 +121,6 @@ export default class AddRecipeScreen extends React.Component {
         Alert.alert(
           "An error occured trying to add your recipe, please try again!"
         );
-        console.log("Error uploading recipe");
       });
   };
   onSubmitButtonPress = async () => {
@@ -128,7 +134,7 @@ export default class AddRecipeScreen extends React.Component {
           validated = true;
         })
         .catch((err) => {
-          console.log("validation error: " + err);
+          Alert.alert("Error", err.message);
         });
     } else {
       Alert.alert("You must supply an image to accompany your recipe");
@@ -163,11 +169,16 @@ export default class AddRecipeScreen extends React.Component {
 
           {/* RECIPE NAME */}
           <View
-            style={[styles.formItem, styles.formSection, { paddingRight: 13 }]}
+            style={[
+              styles.formItemRow,
+              styles.formSection,
+              { paddingRight: 8 },
+            ]}
           >
             <Text style={styles.formName}>Name:</Text>
             <TextInput
               style={styles.textInput}
+              maxLength={50}
               onChangeText={(input) => (this.Recipe.name = input)}
             ></TextInput>
           </View>
@@ -181,13 +192,13 @@ export default class AddRecipeScreen extends React.Component {
               maxLength={80}
               value={this.state.value}
               multiline={true}
-              onChangeText={(value) => {
-                this.setState({ charCount: value });
-                this.Recipe.description = value;
+              onChangeText={(input) => {
+                this.setState({ descCount: input });
+                this.Recipe.description = input;
               }}
             ></TextInput>
             <Text style={{ paddingLeft: 8 }}>
-              {this.state.charCount.length}/80 characters left
+              {this.state.descCount.length}/80 characters left
             </Text>
           </View>
 
@@ -213,6 +224,7 @@ export default class AddRecipeScreen extends React.Component {
                     <TextInput
                       style={styles.ingredientField}
                       placeholder="#"
+                      keyboardType={"numeric"}
                       onChangeText={(count) => {
                         this.onCountHandler(count, key);
                       }}
@@ -268,8 +280,14 @@ export default class AddRecipeScreen extends React.Component {
               maxLength={2200}
               multiline={true}
               numberOfLines={2}
-              onChangeText={(input) => (this.Recipe.directions = input)}
+              onChangeText={(input) => {
+                this.setState({ direCount: input });
+                this.Recipe.directions = input;
+              }}
             ></TextInput>
+            <Text style={{ paddingLeft: 8 }}>
+              {this.state.direCount.length}/2200 characters left
+            </Text>
           </View>
 
           {/* ADDITIONAL INFO */}
@@ -281,6 +299,7 @@ export default class AddRecipeScreen extends React.Component {
                   style={styles.smallTextInput}
                   placeholder="Servings"
                   onChangeText={(input) => (this.Recipe.servings = input)}
+                  keyboardType={"numeric"}
                 ></TextInput>
               </View>
               <View style={styles.inputContainer}>
@@ -288,12 +307,14 @@ export default class AddRecipeScreen extends React.Component {
                   style={styles.smallTextInput}
                   placeholder="Calories"
                   onChangeText={(input) => (this.Recipe.calories = input)}
+                  keyboardType={"numeric"}
                 ></TextInput>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.smallTextInput}
                   placeholder="Time"
+                  maxLength={30}
                   onChangeText={(input) => (this.Recipe.cookTime = input)}
                 ></TextInput>
               </View>

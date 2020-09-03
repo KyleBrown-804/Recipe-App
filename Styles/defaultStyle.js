@@ -151,16 +151,7 @@ export const styles = StyleSheet.create({
   // form items -------------------------
   formSection: {
     padding: 5,
-    paddingBottom: 10,
     marginBottom: 10,
-  },
-  formItem: {
-    maxWidth: "95%",
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
-    justifyContent: "space-between",
   },
   formItemRow: {
     width: "95%",
@@ -205,7 +196,6 @@ export const styles = StyleSheet.create({
   largeInput: {
     flex: 1,
     width: "95%",
-    height: 40,
     fontSize: 18,
     alignSelf: "center",
     borderColor: "gray",

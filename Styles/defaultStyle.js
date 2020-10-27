@@ -30,6 +30,46 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  // SignUpScreen.js =======================================
+
+  // LoginScreen.js ========================================
+  authScreenContainer: {
+    alignItems: "center",
+    justifyContent: "center", 
+  },
+  authScreenField: {
+    alignContent:"center",
+    alignItems: "center",
+    alignSelf: "center",
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 5,
+    textAlign: "center",
+    fontSize: 18,
+    backgroundColor: 'rgba(145, 145, 145, .6)',
+    margin: 10,
+    height: 50,
+    width: "75%",
+  },
+  authButtonContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  authButton: {
+    flex: 1,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "white",
+    borderRadius: 5,
+    textAlign: "center",
+    fontSize: 18,
+    backgroundColor: 'rgba(145, 145, 145, .6)',
+    height: 50,
+    justifyContent: "center",
+    width: "20%",
+    margin: 10,
+  },
+
   // Recipes.js ============================================
   item: {
     marginTop: 24,
@@ -74,17 +114,18 @@ export const styles = StyleSheet.create({
   },
   settingsOption: {
     marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "gray",
-    width: "90%",
+    width: "75%",
     height: 40,
     justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 5,
   },
   settingsHeader: {
-    fontSize: 20,
+    fontSize: 30,
     color: "gray",
-    textAlign: "left",
+    alignSelf: "center",
     padding: 10,
+    margin: 10,
   },
 
   // AddRecipeScreen.js ================================================
@@ -134,7 +175,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     paddingHorizontal: 15,
     marginTop: 25,
-    marginHorizontal: 15
+    marginHorizontal: 15,
   },
   submitButton: {
     width: 150,

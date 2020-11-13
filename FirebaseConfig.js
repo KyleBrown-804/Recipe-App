@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 
+// Obscuring with Gitignore
 const firebaseConfig = {
   apiKey: "AIzaSyD5imZlMZa7p6r_We-09F-UhPJohkxofwQ",
   authDomain: "recipe-logger-app.firebaseapp.com",

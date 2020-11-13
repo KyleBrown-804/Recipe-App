@@ -1,2 +1,2 @@
 # Recipe-App
-Mobile app for logging recipes using React Native
+Mobile app for logging recipes using React Native.

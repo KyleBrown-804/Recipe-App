@@ -12,5 +12,5 @@ web-build/
 # macOS
 .DS_Store
 
-# Hiding config for security
+# Ignore Firebase config for security
 FirebaseConfig.js

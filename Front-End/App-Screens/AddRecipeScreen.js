@@ -71,6 +71,7 @@ export default class AddRecipeScreen extends React.Component {
   }
   getPermissionAsync = async () => {
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    await Permissions.askAsync(Permissions.CAMERA);
   };
 
   /*
